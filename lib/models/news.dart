@@ -1,17 +1,17 @@
-class NewsClass {
-  String info;
-  String time;
-  String date;
-  String watchCaunt;
-  String image;
-  String title;
+import 'article.dart';
 
-  NewsClass({
-    required this.time,
-    required this.image,
-    required this.date,
-    required this.title,
-    required this.watchCaunt,
-    required this.info
+class News {
+  List<Article>? articles;
+
+  News({
+    required this.articles,
   });
+
+  factory News.fromJson(Map<String, dynamic> json) {
+    return News(
+      articles: (json['articles'] as List)
+          .map((article) => Article.fromJson(article))
+          .toList(),
+    );
+  }
 }

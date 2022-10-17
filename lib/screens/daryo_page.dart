@@ -25,7 +25,7 @@ class _Daryo_pageState extends State<Daryo_page> {
                   context: context,
                   builder: ((context) => AlertDialog(
                         title: Text("Kechirasiz!"),
-                        content: Text("Bu project to'lib bitirilmagan"),
+                        content: Text("Bu project to'liq bitirilmagan"),
                         actions: [
                           TextButton(
                               onPressed: () {
@@ -44,7 +44,7 @@ class _Daryo_pageState extends State<Daryo_page> {
           )
         ],
         title: const Text(
-          "Daryo",
+          "News",
           style: TextStyle(fontSize: 28, fontWeight: FontWeight.w400),
         ),
       ),
@@ -61,8 +61,8 @@ class _Daryo_pageState extends State<Daryo_page> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text(
-                          'Daryo',
+                        const Text(
+                          'News',
                           style: TextStyle(fontSize: 24, color: Colors.white),
                         ),
                         SizedBox(
@@ -76,7 +76,7 @@ class _Daryo_pageState extends State<Daryo_page> {
                     ),
                     Row(
                       children: [
-                        Text(
+                        const Text(
                           'Toshkent',
                           style: TextStyle(
                             fontSize: 16,
@@ -86,7 +86,7 @@ class _Daryo_pageState extends State<Daryo_page> {
                         SizedBox(
                           width: 115.w,
                         ),
-                        Icon(
+                        const Icon(
                           Icons.filter_drama,
                           color: Colors.white,
                         ),
@@ -94,7 +94,7 @@ class _Daryo_pageState extends State<Daryo_page> {
                         Text('+12.0', style: TextStyle(color: Colors.white)),
                       ],
                     ),
-                    Divider(
+                    const Divider(
                       thickness: 0.8,
                       color: Colors.white,
                     ),
@@ -103,7 +103,7 @@ class _Daryo_pageState extends State<Daryo_page> {
                     ),
                     Row(
                       children: [
-                        Icon(
+                        const Icon(
                           Icons.monetization_on_outlined,
                           color: Colors.white,
                           size: 20,
@@ -111,14 +111,14 @@ class _Daryo_pageState extends State<Daryo_page> {
                         SizedBox(
                           width: 2.w,
                         ),
-                        Text(
+                        const Text(
                           '10769.78',
                           style: TextStyle(fontSize: 14, color: Colors.white),
                         ),
                         SizedBox(
                           width: 10.w,
                         ),
-                        Icon(
+                        const Icon(
                           Icons.euro_outlined,
                           color: Colors.white,
                           size: 20,
@@ -126,14 +126,14 @@ class _Daryo_pageState extends State<Daryo_page> {
                         SizedBox(
                           width: 2.w,
                         ),
-                        Text(
+                        const Text(
                           '10769.78',
                           style: TextStyle(fontSize: 14, color: Colors.white),
                         ),
                         SizedBox(
                           width: 10.w,
                         ),
-                        Icon(
+                        const Icon(
                           Icons.currency_ruble,
                           color: Colors.white,
                           size: 20,
@@ -141,7 +141,7 @@ class _Daryo_pageState extends State<Daryo_page> {
                         SizedBox(
                           width: 2.w,
                         ),
-                        Text(
+                        const Text(
                           '146.77',
                           style: TextStyle(fontSize: 14, color: Colors.white),
                         ),

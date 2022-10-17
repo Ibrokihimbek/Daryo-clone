@@ -9,7 +9,6 @@ void main() {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return ScreenUtilInit(
@@ -21,8 +20,7 @@ class MyApp extends StatelessWidget {
             debugShowCheckedModeBanner: false,
             title: 'Daryo',
             theme: ThemeData(primarySwatch: Colors.blue),
-            home: child
-            );
+            home: child);
       },
       child: Daryo_page(),
     );

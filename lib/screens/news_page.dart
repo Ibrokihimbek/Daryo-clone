@@ -1,169 +1,118 @@
+import 'dart:convert';
+
 import 'package:daryo/models/news.dart';
 import 'package:daryo/utils/images.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:http/http.dart' as http;
+
+import '../models/article.dart';
 
 class News_Page extends StatefulWidget {
   const News_Page({super.key});
-  static List<NewsClass> news = [
-    NewsClass(
-        time: '20:54',
-        image: Myimages.salomatlik,
-        date: '29 sentabr 2022',
-        title:
-            "Mavsumiy infeksiyalarni yengish uchun foydali mahsulotlarni iste'mol qilish kerak.",
-        watchCaunt: '123',
-        info: 'Salomatlik'),
-    NewsClass(
-        time: '08:52',
-        image: Myimages.tez_yordam,
-        date: '30 sntabr 2022',
-        title:
-            "Quyi Chirchiqdagi bog'chada bolalar ovqatdan zaharlangani aytilmoqda",
-        watchCaunt: '120001',
-        info: 'Mahaliy'),
-    NewsClass(
-        time: '09:10',
-        image: Myimages.putin,
-        date: '30 sentabr 2022',
-        title:
-            "Rossiya Zaporojye va Xerson viloyatlari mustaqilligini tan oldi",
-        watchCaunt: '281231',
-        info: 'Dunyo'),
-    NewsClass(
-        time: '22:33',
-        image: Myimages.kros,
-        date: '29 sentabr 2022',
-        title: "Toni Kroos mavsum so'ngida faoliyatini yakunlamoqchi",
-        watchCaunt: '1827522',
-        info: 'Sport'),
-    NewsClass(
-        time: '10:04',
-        image: Myimages.riana,
-        date: '28 sentabr 2022',
-        title:
-            "Besh yil ichida ilk bor: amerikalik xonanda Rianna konsert berishini ma'lum qildi.",
-        watchCaunt: '999',
-        info: 'Madaniyat'),
-    NewsClass(
-        time: '20:54',
-        image: Myimages.salomatlik,
-        date: '29 sentabr 2022',
-        title:
-            "Mavsumiy infeksiyalarni yengish uchun foydali mahsulotlarni iste'mol qilish kerak.",
-        watchCaunt: '123',
-        info: 'Salomatlik'),
-    NewsClass(
-        time: '08:52',
-        image: Myimages.tez_yordam,
-        date: '30 sntabr 2022',
-        title:
-            "Quyi Chirchiqdagi bog'chada bolalar ovqatdan zaharlangani aytilmoqda",
-        watchCaunt: '120001',
-        info: 'Mahaliy'),
-    NewsClass(
-        time: '09:10',
-        image: Myimages.putin,
-        date: '30 sentabr 2022',
-        title:
-            "Rossiya Zaporojye va Xerson viloyatlari mustaqilligini tan oldi",
-        watchCaunt: '281235',
-        info: 'Dunyo'),
-    NewsClass(
-        time: '22:33',
-        image: Myimages.kros,
-        date: '29 sentabr 2022',
-        title: "Toni Kroos mavsum so'ngida faoliyatini yakunlamoqchi",
-        watchCaunt: '1827500',
-        info: 'Sport'),
-    NewsClass(
-        time: '10:04',
-        image: Myimages.riana,
-        date: '28 sentabr 2022',
-        title:
-            "Besh yil ichida ilk bor: amerikalik xonanda Rianna konsert berishini ma'lum qildi.",
-        watchCaunt: '999',
-        info: 'Madaniyat'),
-  ];
   @override
   State<News_Page> createState() => _News_PageState();
 }
 
 class _News_PageState extends State<News_Page> {
+  Future<News?> getNews() async {
+    String url =
+        'https://newsapi.org/v2/everything?q=tesla&from=2022-09-17&sortBy=publishedAt&apiKey=cf269556cda842548e35e58d9e8f4f0d';
+
+    var response = await http.get(Uri.parse(url));
+
+    if (response.statusCode == 200) {
+      var json = jsonDecode(response.body) as Map<String, dynamic>;
+      return News.fromJson(json);
+    }
+
+    return null;
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: ListView.builder(
-        physics: const BouncingScrollPhysics(),
-        itemCount: News_Page.news.length,
-        itemBuilder: (BuildContext context, int index) {
-          return NewsItem(News_Page.news[index]);
-        },
-      ),
+    return FutureBuilder<News?>(
+      future: getNews(),
+      builder: (BuildContext context, AsyncSnapshot<News?> birnima) {
+        if (birnima.connectionState == ConnectionState.waiting) {
+          return Center(child: CircularProgressIndicator());
+        }
+        if (birnima.connectionState == ConnectionState.done) {
+          if (birnima.hasData) {
+            News? news = birnima.data;
+            return NewsItem(news?.articles);
+          }
+          if (birnima.hasError) {
+            return Center(child: Text(birnima.error.toString()));
+          }
+        }
+        return Container(
+          child: const Center(
+            child: Text(
+              "Nimdir xatolik bor",
+              style: TextStyle(fontSize: 24),
+            ),
+          ),
+        );
+      },
     );
   }
 
-  Widget NewsItem(NewsClass news) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 5).r,
-      child: Column(
-        children: [
-          Row(
+  Widget NewsItem(List<Article>? articles) {
+    return ListView.builder(
+      shrinkWrap: true,
+      itemCount: articles?.length ?? 0,
+      itemBuilder: (context, index) {
+        return Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 5).r,
+          child: Column(
             children: [
-              Text(
-                '${news.info}',
-                style:
-                    const TextStyle(color: Color.fromARGB(255, 111, 182, 240)),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    "${articles?[index].author ?? ''}",
+                    style: const TextStyle(
+                        color: Color.fromARGB(255, 111, 182, 240)),
+                  ),
+                  Row(
+                    children: [
+                      Text(
+                        "${articles?[index].publishedAt ?? ''}",
+                        style: const TextStyle(
+                          fontWeight: FontWeight.w400,
+                          color: Colors.grey,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
               ),
               SizedBox(
-                width: 90.w,
+                height: 8.h,
               ),
-              Text(
-                '${news.time} | ${news.date} | ',
-                style: const TextStyle(
-                  fontWeight: FontWeight.w400,
-                  color: Colors.grey,
-                ),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Image.network(
+                    articles?[index].urlToImage ?? '',
+                    width: 120.w,
+                  ),
+                  SizedBox(
+                    width: 10.w,
+                  ),
+                  Expanded(
+                    child: Text(articles?[index].content ?? ''),
+                  ),
+                ],
               ),
-              const Icon(
-                Icons.remove_red_eye,
-                color: Color.fromARGB(255, 101, 179, 242),
-              ),
-              SizedBox(
-                width: 4.w,
-              ),
-              Text(
-                '${news.watchCaunt}',
-                style: const TextStyle(
-                  color: Color.fromARGB(255, 96, 171, 232),
-                  fontWeight: FontWeight.w700,
-                ),
+              const Divider(
+                thickness: 2,
               ),
             ],
           ),
-          SizedBox(
-            height: 8.h,
-          ),
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Image.asset(
-                news.image,
-                width: 120.w,
-              ),
-              SizedBox(
-                width: 10.w,
-              ),
-              Expanded(
-                child: Text('${news.title}'),
-              ),
-            ],
-          ),
-          const Divider(
-            thickness: 2,
-          ),
-        ],
-      ),
+        );
+      },
     );
   }
 }
